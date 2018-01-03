@@ -1,0 +1,24 @@
+{
+  "name": "christina",
+  "version": "0.0.0",
+  "description": "library",
+  "main": "dist/christina.js",
+  "repository": "git@github.com:YuriTu/Christina.git",
+  "author": "tuqiang_ru@163.com",
+  "license": "MIT",
+  "scripts": {
+    "build": "bash ./tools/build.sh"
+  },
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.12.1",
+    "uglifyjs-webpack-plugin": "^1.0.1",
+    "webpack": "^3.9.1"
+  }
+}
