@@ -11,6 +11,13 @@ A modern JavaScript animation utility library
 2. 数据初始化
 3. 常用动画模块
 
+# How
+```javascript
+npm install christina
+
+import _ from 'christina'
+```
+
 # Why is Christina
 
 克里斯蒂娜是动画《命运石之门》中男主角的助手——牧濑红莉栖的别称。
