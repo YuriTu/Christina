@@ -1,4 +1,5 @@
 yarn-error.log
 ci.sh
 node_modules
+.idea
 
