@@ -7,10 +7,13 @@
   "author": "tuqiang_ru@163.com",
   "license": "MIT",
   "scripts": {
-    "build": "bash ./tools/build.sh"
+    "build": "bash ./tools/build.sh",
+    "mocha": "mocha --require babel-core/register",
+    "lint":"eslint src/index.js --fix"
   },
   "dependencies": {
     "babel-core": "^6.26.0",
+    "babel-polyfill":"^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
@@ -19,6 +22,8 @@
   "devDependencies": {
     "eslint": "^4.12.1",
     "uglifyjs-webpack-plugin": "^1.0.1",
-    "webpack": "^3.9.1"
+    "webpack": "^3.9.1",
+    "mocha":"^4.1.0",
+    "chai": "^4.1.2"
   }
 }
