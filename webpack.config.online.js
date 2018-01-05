@@ -1,10 +1,10 @@
-
 const webpack = require('webpack');
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const entries = {
-    'christina': './src/index.js'
+    'christina': './src/index.js',
+    'christina.min': './src/index.js'
 };
 
 module.exports = {
@@ -43,6 +43,8 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('pro')
         }),
-        new UglifyJSPlugin()
+        new UglifyJSPlugin({
+            include : /\.min\.js$/
+        })
     ]
 };
