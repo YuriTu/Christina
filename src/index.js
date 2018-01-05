@@ -44,7 +44,7 @@ class Christina {
 
     /**
      * Hex转RGBA
-     * @param {String} color Hex颜色值
+     * @param {String} color Hex颜色值 eg： #ff0000 #fff
      * @param {Number} alpha 值 默认为1
      * @returns {object} {rbg:{String},toString:{function} } RGB颜色值
      */
@@ -74,7 +74,7 @@ class Christina {
      * @param {Array} color R、G、B三个值
      * @returns {string} Hex值
      */
-    rgbToHex(...color) {
+    rgbToHex(color) {
         const newColor = color.map(item => {
             return Number(item).toString(16).length < 2 ?
                 `0${Number(item).toString(16)}` :
