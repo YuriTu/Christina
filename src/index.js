@@ -83,6 +83,21 @@ class Christina {
 
         return `#${newColor}`;
     }
+    // 2.2 随机数生成
+    // 随机浮点数
+    random(min = 0,max){
+        if(max === undefined){
+            max = min || 1;
+            min = 0;
+        }
+        return Math.random() * ( max - min ) + min;
+    }
+    // 获得一个区间的整数随机数 不指定则为 [0- 100] 闭区间
+    randomInt(max = 100, min = 0) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
     /**
      * 生成一组平滑的随机数，根据数量，将随机数均匀的分布
@@ -109,14 +124,7 @@ class Christina {
         return rs;
     }
 
-
-    // 获得一个区间的整数随机数 不指定则为 [0- 100] 闭区间
-    intRandom(max = 100, min = 0) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
+    // 2.3 数据处理
 
     /**
      * 数字映射
@@ -181,50 +189,6 @@ class Christina {
         return rs;
     }
 
-    /**
-     * 计算偏移矩阵
-     * @def: .getMatrix4: offset => THREE.Matrix4
-     *   offset: {Object}
-     *     RotationX: {Number} // 绕 X 轴旋转角度，2*PI 为一圈，eg: Math.PI / 2
-     *     RotationY: {Number} // 绕 Y 轴旋转角度，2*PI 为一圈，eg: Math.PI / 2
-     *     RotationZ: {Number} // 绕 Z 轴旋转角度，2*PI 为一圈，eg: Math.PI / 2
-     *     Translation: {Array} // 位移 [x,y,z]
-     *     Scale: {Array} // 缩放大小 [x,y,z]
-     **/
-
-    getMatrix4(offset) {
-        let m = new THREE.Matrix4();
-
-        for (const key in offset) {
-            const val = offset[key];
-            if (Array.isArray(val)) { // 位移，缩放，值为数组
-                // console.log(...val);
-                m[`make${key}`](...val);
-            } else { // 旋转，值为角度
-                m[`make${key}`](val);
-            }
-        }
-        return m;
-    }
-
-    /**
-     * 返回float的区间随机数
-     * @param min 最小值
-     * @param max 最大值
-     * @param ease 渐变函数，可以指定变动step频率
-     * @returns {*}
-     */
-    rand(min, max, ease) {
-        if (max === undefined) {
-            max = min;
-            min = 0;
-        }
-        let random = Math.random();
-        if (ease) {
-            random = ease(Math.random(), 0, 1, 1);
-        }
-        return random * (max - min) + min;
-    }
 
 
     /**
@@ -289,6 +253,32 @@ class Christina {
                 return {};
         }
         return {};
+    }
+
+    /**
+     * 计算偏移矩阵
+     * @def: .getMatrix4: offset => THREE.Matrix4
+     *   offset: {Object}
+     *     RotationX: {Number} // 绕 X 轴旋转角度，2*PI 为一圈，eg: Math.PI / 2
+     *     RotationY: {Number} // 绕 Y 轴旋转角度，2*PI 为一圈，eg: Math.PI / 2
+     *     RotationZ: {Number} // 绕 Z 轴旋转角度，2*PI 为一圈，eg: Math.PI / 2
+     *     Translation: {Array} // 位移 [x,y,z]
+     *     Scale: {Array} // 缩放大小 [x,y,z]
+     **/
+
+    getMatrix4(offset) {
+        let m = new THREE.Matrix4();
+
+        for (const key in offset) {
+            const val = offset[key];
+            if (Array.isArray(val)) { // 位移，缩放，值为数组
+                // console.log(...val);
+                m[`make${key}`](...val);
+            } else { // 旋转，值为角度
+                m[`make${key}`](val);
+            }
+        }
+        return m;
     }
 
     // 3.2 动画处理
