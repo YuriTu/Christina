@@ -11,7 +11,9 @@ module.exports = {
     'entry': entries,
     'output': {
         'filename': '[name].js',
-        'path': path.join(__dirname, 'dist/')
+        'path': path.join(__dirname, 'dist/'),
+        'library': 'Chris',
+        'libraryTarget': 'umd'
     },
     'module': {
         'rules': [

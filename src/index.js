@@ -5,6 +5,11 @@
 
 
 class Christina {
+    constructor() {
+        this.test = () => 1;
+        this.test2 = this.test.bind(this);
+        this.c = 1;
+    }
     // 1. 类型判断
     type(obj) {
         return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '');
@@ -370,4 +375,4 @@ class Christina {
     }
 }
 
-export default (new Christina());
+export default new Christina();

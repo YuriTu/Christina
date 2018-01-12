@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["Chris"] = factory();
+	else
+		root["Chris"] = factory();
+})(typeof self !== 'undefined' ? self : this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -504,12 +514,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Christina = function () {
     function Christina() {
         (0, _classCallCheck3.default)(this, Christina);
+
+        this.test = function () {
+            return 1;
+        };
+        this.test2 = this.test.bind(this);
+        this.c = 1;
     }
+    // 1. 类型判断
+
 
     (0, _createClass3.default)(Christina, [{
         key: 'type',
-
-        // 1. 类型判断
         value: function type(obj) {
             return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '');
         }
@@ -1659,3 +1675,4 @@ $export($export.S + $export.F * !__webpack_require__(4), 'Object', { definePrope
 
 /***/ })
 /******/ ]);
+});

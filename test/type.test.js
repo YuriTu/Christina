@@ -3,7 +3,7 @@
  * @author tuqiang_ru@163.com）
  */
 
-import _ from '../src/index';
+import _ from '../dist/christina';
 import {expect} from 'chai';
 
 describe('Type judgment', () => {

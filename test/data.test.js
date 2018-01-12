@@ -3,9 +3,8 @@
  * @author tuqiang_ru@163.com）
  */
 
-import _ from '../src/index';
+import _ from '../dist/christina';
 import {expect} from 'chai';
-
 describe('Data judgment', () => {
     it('hexToRgba', () => {
         expect(_.hexToRgba('#00FF00').toString()).to.be.equal("RGBA(0,255,0,1)");
@@ -22,8 +21,8 @@ describe('Data judgment', () => {
     it('function', () => {
         expect(_.isFunction(() => null)).to.be.ok;
     });
-    it('intRandom', () => {
-        expect(_.intRandom()).to.be.a('number');
-        expect(_.intRandom(10,20)).to.be.a('number');
+    it('randomInt', () => {
+        expect(_.randomInt()).to.be.a('number');
+        expect(_.randomInt(10,20)).to.be.a('number');
     });
 });
