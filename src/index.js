@@ -46,7 +46,7 @@ class Christina {
     }
 
     // 2.数据处理
-
+    //2.1 数据转换
     /**
      * Hex转RGBA
      * @param {String} color Hex颜色值 eg： #ff0000 #fff
@@ -98,7 +98,7 @@ class Christina {
         return Math.random() * ( max - min ) + min;
     }
     // 获得一个区间的整数随机数 不指定则为 [0- 100] 闭区间
-    randomInt(max = 100, min = 0) {
+    randomInt(min = 0,max = 100 ) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
