@@ -1,6 +1,6 @@
 {
   "name": "christina",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A modern JavaScript animation utility library",
   "main": "dist/christina.js",
   "repository": "git@github.com:YuriTu/Christina.git",

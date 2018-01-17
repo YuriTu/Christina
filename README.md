@@ -93,6 +93,6 @@ _.smoothRandom(count,bits) // -> [0,2.5,4.5,7.2.9.8]
  * @param {number} tarEnd 映射数据终点
  * @returns {number} 映射数据
  */
-_.analogy(3,1,5,0.1,1) // -> 0.6
+_.analogy(3,-5,5,0,100)) // -> 80
 
 ```

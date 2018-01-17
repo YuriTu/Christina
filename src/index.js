@@ -151,9 +151,12 @@ class Christina {
      * @returns {Float32Array}
      * @constructor
      */
-    Float32Concat(first, second) {
-        var firstLength = first.length,
-            result = new Float32Array(firstLength + second.length);
+    float32Concat(first, second) {
+        if (!( this.isFloat32Array(first) || this.isArray(first) ) || !(this.isFloat32Array(second) || this.isArray(second) )) {
+            return new Float32Array([]);
+        }
+        const firstLength = first.length;
+        const result = new Float32Array(firstLength + second.length);
 
         result.set(first);
         result.set(second, firstLength);
@@ -161,7 +164,7 @@ class Christina {
         return result;
     }
 
-    Float32ToArray(origin) {
+    float32ToArray(origin) {
         if (!this.isFloat32Array(origin)) {
             return origin;
         }
