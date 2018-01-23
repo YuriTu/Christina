@@ -5,11 +5,6 @@
 
 
 class Christina {
-    constructor() {
-        this.test = () => 1;
-        this.test2 = this.test.bind(this);
-        this.c = 1;
-    }
     // 1. 类型判断
     type(obj) {
         return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '');
@@ -375,6 +370,44 @@ class Christina {
         }
 
         return null;
+    }
+
+    distancePoint(x1,x2,y1,y2,z1,z2){
+
+        return Math.sqrt( (x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
+    }
+
+    partition(myArray, left, right){
+        // 保存定位点
+        let temp = myArray[left]
+        while (left < right){
+            // 交换
+            while(left < right && myArray[right] >= temp)--right;
+            myArray[left] =
+
+                myArray[right];
+            while(left < right && myArray[left] <= temp)++left;
+            myArray[right] = myArray[left];
+        }
+        // 还原
+        myArray[left] = temp;
+        return left;
+    }
+    Qsort(
+        arr = [],
+        left = 0,
+        right = arr.length - 1,
+    ){
+        if(left >= right) return;
+        let index = this.partition(arr, left, right);
+        // 排除中间位
+        // if(left < index - 1){
+        this.Qsort(arr, left, index - 1);
+        // }
+        // if(index < right){
+        this.Qsort(arr, index +1, right);
+        // }
+        return arr;
     }
 }
 

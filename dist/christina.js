@@ -514,18 +514,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Christina = function () {
     function Christina() {
         (0, _classCallCheck3.default)(this, Christina);
-
-        this.test = function () {
-            return 1;
-        };
-        this.test2 = this.test.bind(this);
-        this.c = 1;
     }
-    // 1. 类型判断
-
 
     (0, _createClass3.default)(Christina, [{
         key: 'type',
+
+        // 1. 类型判断
         value: function type(obj) {
             return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '');
         }
@@ -568,7 +562,7 @@ var Christina = function () {
         }
 
         // 2.数据处理
-
+        //2.1 数据转换
         /**
          * Hex转RGBA
          * @param {String} color Hex颜色值 eg： #ff0000 #fff
@@ -640,8 +634,8 @@ var Christina = function () {
     }, {
         key: 'randomInt',
         value: function randomInt() {
-            var max = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 100;
-            var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+            var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+            var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 100;
 
             min = Math.ceil(min);
             max = Math.floor(max);
@@ -703,10 +697,13 @@ var Christina = function () {
          */
 
     }, {
-        key: 'Float32Concat',
-        value: function Float32Concat(first, second) {
-            var firstLength = first.length,
-                result = new Float32Array(firstLength + second.length);
+        key: 'float32Concat',
+        value: function float32Concat(first, second) {
+            if (!(this.isFloat32Array(first) || this.isArray(first)) || !(this.isFloat32Array(second) || this.isArray(second))) {
+                return new Float32Array([]);
+            }
+            var firstLength = first.length;
+            var result = new Float32Array(firstLength + second.length);
 
             result.set(first);
             result.set(second, firstLength);
@@ -714,8 +711,8 @@ var Christina = function () {
             return result;
         }
     }, {
-        key: 'Float32ToArray',
-        value: function Float32ToArray(origin) {
+        key: 'float32ToArray',
+        value: function float32ToArray(origin) {
             if (!this.isFloat32Array(origin)) {
                 return origin;
             }
@@ -956,6 +953,48 @@ var Christina = function () {
             }
 
             return null;
+        }
+    }, {
+        key: 'distancePoint',
+        value: function distancePoint(x1, x2, y1, y2, z1, z2) {
+
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2));
+        }
+    }, {
+        key: 'partition',
+        value: function partition(myArray, left, right) {
+            // 保存定位点
+            var temp = myArray[left];
+            while (left < right) {
+                // 交换
+                while (left < right && myArray[right] >= temp) {
+                    --right;
+                }myArray[left] = myArray[right];
+                while (left < right && myArray[left] <= temp) {
+                    ++left;
+                }myArray[right] = myArray[left];
+            }
+            // 还原
+            myArray[left] = temp;
+            return left;
+        }
+    }, {
+        key: 'Qsort',
+        value: function Qsort() {
+            var arr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+            var left = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+            var right = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : arr.length - 1;
+
+            if (left >= right) return;
+            var index = this.partition(arr, left, right);
+            // 排除中间位
+            // if(left < index - 1){
+            this.Qsort(arr, left, index - 1);
+            // }
+            // if(index < right){
+            this.Qsort(arr, index + 1, right);
+            // }
+            return arr;
         }
     }]);
     return Christina;
