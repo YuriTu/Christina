@@ -512,14 +512,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 var Christina = function () {
+    // 构造函数处理
     function Christina() {
         (0, _classCallCheck3.default)(this, Christina);
+
+        String.prototype.setProto = function (key, value) {
+            this[key] = value;
+        };
     }
+    // 1. 类型判断
+
 
     (0, _createClass3.default)(Christina, [{
         key: 'type',
-
-        // 1. 类型判断
         value: function type(obj) {
             return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '');
         }
@@ -565,7 +570,7 @@ var Christina = function () {
         //2.1 数据转换
         /**
          * Hex转RGBA
-         * @param {String} color Hex颜色值 eg： #ff0000 #fff
+         * @param {String} color Hex颜色值 eg： #ff0000 #fff 0xfff
          * @param {Number} alpha 值 默认为1
          * @returns {object} {rbg:{String},toString:{function} } RGB颜色值
          */
@@ -573,7 +578,10 @@ var Christina = function () {
     }, {
         key: 'hexToRgba',
         value: function hexToRgba(color, alpha) {
-            var newColor = color.replace('#', '');
+            if (!color.startsWith('#') && !color.startsWith('0x')) {
+                throw new Error('args is not HEX color');
+            }
+            var newColor = color.replace(/#|0x/, '');
             var a = parseFloat(alpha) || 1;
             if (newColor.length === 3) {
                 newColor = newColor.split('').map(function (item) {
@@ -589,12 +597,9 @@ var Christina = function () {
                     return item !== '';
                 });
             }
-            var result = {
-                'rgb': newColor
-            };
-            result.toString = function () {
-                return 'RGBA(' + newColor.join(',') + ',' + a + ')';
-            };
+            var result = new String('rgba(' + newColor.join(',') + ',' + a + ')');
+            result.setProto('rgb', 'rgb(' + newColor.join(',') + ')');
+            result.setProto('rgbArr', newColor);
 
             return result;
         }
@@ -612,7 +617,10 @@ var Christina = function () {
                 return Number(item).toString(16).length < 2 ? '0' + Number(item).toString(16) : Number(item).toString(16);
             }).join('');
 
-            return '#' + newColor;
+            var rs = new String('#' + newColor);
+            rs.setProto('0x', '0x' + newColor);
+
+            return rs;
         }
         // 2.2 随机数生成
         // 随机浮点数
@@ -768,7 +776,7 @@ var Christina = function () {
         /**
          * @勾股定理
          * @三维矩阵变换
-         * @随机整数
+         * @空间点距离
          * @raf polyfill
          */
 
@@ -782,13 +790,17 @@ var Christina = function () {
 
     }, {
         key: 'pythagoras',
-        value: function pythagoras(side1, side2, hypotenuse) {
+        value: function pythagoras() {
+            var side1 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+            var side2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+            var hypotenuse = arguments[2];
+
             var rs = void 0;
             if (!hypotenuse) {
                 rs = Math.sqrt(Math.pow(+side1, 2) + Math.pow(+side2, 2));
             } else {
                 var s1 = +side1 || 0;
-                var s2 = +side1 || 0;
+                var s2 = +side2 || 0;
                 rs = Math.sqrt(Math.pow(+hypotenuse, 2) - Math.pow(s1, 2) - Math.pow(s2, 2));
             }
             return rs;
@@ -808,20 +820,51 @@ var Christina = function () {
         key: 'matrix3DRotate',
         value: function matrix3DRotate() {
             var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'x';
-            var angle = arguments[1];
+            var angle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
             var x = arguments[2];
             var y = arguments[3];
             var z = arguments[4];
 
             var cos = Math.cos(angle);
             var sin = Math.sin(angle);
-            switch (type) {
-                case 'x':
-                    {}
+            var rs = {};
+            switch (true) {
+                case /x/i.test(type):
+                    rs.x = x;
+                    rs.y = y * cos - z * sin;
+                    rs.z = y * sin + z * cos;
+                    break;
+                case /y/i.test(type):
+                    rs.x = z * sin + x * cos;
+                    rs.y = y;
+                    rs.z = z * cos - x * sin;
+                    break;
+                case /z/i.test(type):
+                    rs.x = x * cos - y * sin;
+                    rs.y = z * sin + x * cos;
+                    rs.z = z;
+                    break;
                 default:
-                    return {};
+                    throw new Error('type must be x|y|z');
             }
-            return {};
+            return rs;
+        }
+
+        /**
+         * 空间中两点距离
+         * @param x1
+         * @param x2
+         * @param y1
+         * @param y2
+         * @param z1
+         * @param z2
+         * @returns {number}
+         */
+
+    }, {
+        key: 'distancePoint',
+        value: function distancePoint(x1, x2, y1, y2, z1, z2) {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2));
         }
 
         /**
@@ -955,12 +998,6 @@ var Christina = function () {
             return null;
         }
     }, {
-        key: 'distancePoint',
-        value: function distancePoint(x1, x2, y1, y2, z1, z2) {
-
-            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2));
-        }
-    }, {
         key: 'partition',
         value: function partition(myArray, left, right) {
             // 保存定位点
@@ -978,6 +1015,8 @@ var Christina = function () {
             myArray[left] = temp;
             return left;
         }
+        // 快排
+
     }, {
         key: 'Qsort',
         value: function Qsort() {
@@ -987,13 +1026,8 @@ var Christina = function () {
 
             if (left >= right) return;
             var index = this.partition(arr, left, right);
-            // 排除中间位
-            // if(left < index - 1){
             this.Qsort(arr, left, index - 1);
-            // }
-            // if(index < right){
             this.Qsort(arr, index + 1, right);
-            // }
             return arr;
         }
     }]);
