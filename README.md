@@ -4,6 +4,7 @@ A modern JavaScript animation utility library
 # Introduction
 
 克里斯蒂娜是一个专为 Canvas 2D动画、webGL3D动画所设计的工具库。
+
 christina.js is a animation library for Canvas & webGL.
 
 她能完成常用的 
