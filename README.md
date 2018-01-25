@@ -100,4 +100,68 @@ _.smoothRandom(count,bits) // -> [0,2.5,4.5,7.2.9.8]
  */
 _.analogy(3,-5,5,0,100)) // -> 80
 
+/**
+ * float32类型的array.concat
+ * @param first
+ * @param second
+ * @returns {Float32Array}
+ * @constructor
+ */
+
+_.float32Concat([1,2,3],new Float32Array([4,5,6])) // -> new Float32Array([1,2,3,4,5,6])
+
+_.float32ToArray(new Float32Array([4,5,6]) // -> [4,5,6]
+
+/**
+ * 数组堆叠 将数组循环顺序堆叠于一个指定长度的数组
+ * @param maxLength 目标长度
+ * @param origin 源数组
+ * @returns {*} 结果数组
+ */
+
+_.arrayStacked(6,[1,2,3]) // -> [1,2,3,1,2,3]
 ```
+
+- 算法
+
+1. 几何计算
+
+```javascript
+/**
+ * 勾股定理计算
+ * @param {number} side1
+ * @param {number} side2
+ * @param {number} hypotenuse 斜边
+ * @returns {*}
+ */
+_.pythagoras(3,4) // -> 5
+_.pythagoras(null,4,5) // -> 3
+
+/**
+ * 三维矩阵变换
+ * @param {string} type 饶哪个轴旋转
+ * @param {number} angle 旋转角度
+ * @param {num} x 坐标
+ * @param {num} y 坐标
+ * @param {num} z 坐标
+ * @returns {x:number,y:number,z:number}
+ */
+
+// js语言精度问题可能为-0.99999，有一定误差不影响动画制作
+_.matrix3DRotate('x',Math.PI / 2,1,1,1) // -> {x:1,y:-1,z:1}
+
+/**
+ * 空间中两点距离
+ * @param x1
+ * @param x2
+ * @param y1
+ * @param y2
+ * @param z1
+ * @param z2
+ * @returns {number}
+ */
+_.distancePoint(1,5,1,1,1,2) // -> Math.sqrt(17)
+```
+
+
+

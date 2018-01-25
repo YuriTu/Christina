@@ -222,7 +222,7 @@ class Christina {
     /**
      * @勾股定理
      * @三维矩阵变换
-     * @随机整数
+     * @空间点距离
      * @raf polyfill
      */
 
@@ -233,13 +233,13 @@ class Christina {
      * @param {number} hypotenuse 斜边
      * @returns {*}
      */
-    pythagoras(side1, side2, hypotenuse) {
+    pythagoras(side1 = 0, side2 = 0, hypotenuse) {
         let rs;
         if (!hypotenuse) {
             rs = Math.sqrt(Math.pow(+side1, 2) + Math.pow(+side2, 2));
         } else {
             const s1 = +side1 || 0;
-            const s2 = +side1 || 0;
+            const s2 = +side2 || 0;
             rs = Math.sqrt(Math.pow(+hypotenuse, 2) - Math.pow(s1, 2) - Math.pow(s2, 2));
         }
         return rs;
@@ -255,18 +255,44 @@ class Christina {
      * @returns {object}
      */
 
-    matrix3DRotate(type = 'x', angle, x, y, z) {
+    matrix3DRotate(type = 'x', angle = 0, x, y, z) {
         let cos = Math.cos(angle);
         let sin = Math.sin(angle);
-        switch (type) {
-            case 'x':
-            {
-
-            }
+        let rs = {};
+        switch (true) {
+            case (/x/i).test(type):
+                rs.x = x;
+                rs.y = y * cos - z * sin;
+                rs.z = y * sin + z * cos;
+                break;
+            case (/y/i).test(type):
+                rs.x = z * sin + x * cos;
+                rs.y = y;
+                rs.z = z * cos - x * sin;
+                break;
+            case (/z/i).test(type):
+                rs.x = x * cos - y * sin;
+                rs.y = z * sin + x * cos;
+                rs.z = z;
+                break;
             default:
-                return {};
+                throw new Error('type must be x|y|z')
         }
-        return {};
+        return rs;
+    }
+
+    /**
+     * 空间中两点距离
+     * @param x1
+     * @param x2
+     * @param y1
+     * @param y2
+     * @param z1
+     * @param z2
+     * @returns {number}
+     */
+    distancePoint(x1,x2,y1,y2,z1,z2){
+        return Math.sqrt( (x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
     }
 
     /**
@@ -383,10 +409,7 @@ class Christina {
         return null;
     }
 
-    distancePoint(x1,x2,y1,y2,z1,z2){
 
-        return Math.sqrt( (x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
-    }
 
     partition(myArray, left, right){
         // 保存定位点
@@ -404,6 +427,7 @@ class Christina {
         myArray[left] = temp;
         return left;
     }
+    // 快排
     Qsort(
         arr = [],
         left = 0,
@@ -411,13 +435,8 @@ class Christina {
     ){
         if(left >= right) return;
         let index = this.partition(arr, left, right);
-        // 排除中间位
-        // if(left < index - 1){
         this.Qsort(arr, left, index - 1);
-        // }
-        // if(index < right){
         this.Qsort(arr, index +1, right);
-        // }
         return arr;
     }
 }
