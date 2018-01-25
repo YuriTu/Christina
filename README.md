@@ -4,12 +4,18 @@ A modern JavaScript animation utility library
 # Introduction
 
 克里斯蒂娜是一个专为 Canvas 2D动画、webGL3D动画所设计的工具库。
+christina.js is a animation library for Canvas & webGL.
 
 她能完成常用的 
 
 1. 数据转化
 2. 数据初始化
 3. 常用动画算法
+
+She can help you with 
+1. Convert data
+2. Initialize the data
+3. Commonly animation algorithm
 
 # How
 ```javascript
@@ -22,14 +28,19 @@ import _ from 'christina'
 
 克里斯蒂娜是动画《命运石之门》中男主角的助手——牧濑红莉栖的别称。她协助完成了时间机器。
 
+Christina is the role of the animation "Stone of Destiny".
+Makise Kurisu helped finish the time machine.
+
 希望Christina.js也能像助手一样帮助你构建你的动画世界。
 
+I hope Christina.js can help you build your own animated world just as much as an assistant.
 
 # How to use
 
 ### TL;DR
 
 我们推荐直接看测试用例这样了解更加直观
+I recommend looking at the test case to find out
 
 - 类型判断
 ```javascript
