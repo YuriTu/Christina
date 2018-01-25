@@ -5,6 +5,12 @@
 
 
 class Christina {
+    // 构造函数处理
+    constructor(){
+        String.prototype.setProto = function(key,value){
+            this[key] = value;
+        }
+    }
     // 1. 类型判断
     type(obj) {
         return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '');
@@ -44,27 +50,29 @@ class Christina {
     //2.1 数据转换
     /**
      * Hex转RGBA
-     * @param {String} color Hex颜色值 eg： #ff0000 #fff
+     * @param {String} color Hex颜色值 eg： #ff0000 #fff 0xfff
      * @param {Number} alpha 值 默认为1
      * @returns {object} {rbg:{String},toString:{function} } RGB颜色值
      */
     hexToRgba(color, alpha) {
-        let newColor = color.replace('#', '');
+        if(!color.startsWith('#') && !color.startsWith('0x') ){
+            throw new Error('args is not HEX color');
+        }
+        let newColor = color.replace(/#|0x/, '');
         const a = parseFloat(alpha) || 1;
         if (newColor.length === 3) {
             newColor = newColor.split('').map(item => parseInt(`0x${item}${item}`));
         } else {
             newColor = newColor.split('').map((item, index) => {
                 if (index % 2 === 0) {
-                return parseInt(`0x${item}${newColor[index + 1]}`);
-            }
-            return '';
-        }).filter(item => item !== '');
+                    return parseInt(`0x${item}${newColor[index + 1]}`);
+                }
+                return '';
+            }).filter(item => item !== '');
         }
-        const result = {
-            'rgb': newColor
-        };
-        result.toString = () => `RGBA(${newColor.join(',')},${a})`;
+        const result = new String(`rgba(${newColor.join(',')},${a})`)
+        result.setProto('rgb',`rgb(${newColor.join(',')})`);
+        result.setProto('rgbArr',newColor);
 
         return result;
     }
@@ -81,7 +89,10 @@ class Christina {
                 Number(item).toString(16);
         }).join('');
 
-        return `#${newColor}`;
+        const rs = new String(`#${newColor}`)
+        rs.setProto('0x',`0x${newColor}`)
+
+        return rs;
     }
     // 2.2 随机数生成
     // 随机浮点数

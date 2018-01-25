@@ -55,11 +55,16 @@ _.isIE() // -> bool
 1. 数据转换
 
 ```javascript
-// 十六进制色转rgba
-_.hexToRgba('#FF9E72',.1).toString() // -> 'RGBA(225,158,114,.1)'
+// 十六进制色转rgba 
+// Warning! 此处非 ===
+_.hexToRgba('#FF9E72',.1) // == 'rgba(225,158,114,.1)'
+_.hexToRgba('0xFF9E72',.1) // == 'rgba(225,158,114,.1)'
+_.hexToRgba('#FF9E72',.1).rgb // -> 'rgb(225,158,114)'
+_.hexToRgba('0xFF9E72',.1).rgbArr // -> '[151,39,45]'
 
 // rbga转十六进制色
-_.rgbToHex([0,255,0]) // -> '#00ff00'
+_.rgbToHex([0,255,0]) // == '#00ff00'
+_.rgbToHex([0,255,0])['0x'] // -> '0x00ff00'
 ```
 
 2. 随机数生成
