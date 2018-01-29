@@ -29,7 +29,7 @@ import _ from 'christina'
 
 克里斯蒂娜是动画《命运石之门》中男主角的助手——牧濑红莉栖的别称。她协助完成了时间机器。
 
-Christina is the role of the animation "Stone of Destiny".
+Christina is the role of the animation "Steins;Gate".
 Makise Kurisu helped finish the time machine.
 
 希望Christina.js也能像助手一样帮助你构建你的动画世界。
