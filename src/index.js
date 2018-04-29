@@ -3,8 +3,18 @@
  * @author tuqiang_ru@163.com）
  */
 
+// todo 随机 -1 1 二分数子
 
-class Christina {
+
+Math.radians = function(degrees) {
+    return degrees * Math.PI / 180;
+};
+
+Math.degrees = function(radians) {
+    return radians * 180 / Math.PI;
+};
+
+export default class Christina {
     // 构造函数处理
     constructor(){
         String.prototype.setProto = function(key,value){
@@ -12,35 +22,35 @@ class Christina {
         }
     }
     // 1. 类型判断
-    type(obj) {
+    static type(obj) {
         return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '');
     }
 
-    isArray(obj) {
+    static isArray(obj) {
         return this.type(obj) === 'Array';
     }
 
-    isString(obj) {
+    static isString(obj) {
         return this.type(obj) === 'String';
     }
 
-    isObject(obj) {
+    static isObject(obj) {
         return this.type(obj) === 'Object';
     }
 
-    isFunction(obj) {
+    static isFunction(obj) {
         return this.type(obj) === 'Function';
     }
 
-    isFloat32Array(obj) {
+    static isFloat32Array(obj) {
         return this.type(obj) === 'Float32Array';
     }
 
-    isNullString(obj) {
+    static isNullString(obj) {
         return this.isString(obj) && obj.replace(/(^\s*)|(\s*$)/g, '').length ? false : true;
     }
 
-    isIE(version) {
+    static isIE(version) {
         const b = document.createElement('b');
         b.innerHTML = `<!--[if IE ${version} ]><i></i><![endif]-->`;
         return b.getElementsByTagName('i').length === 1;
@@ -54,7 +64,7 @@ class Christina {
      * @param {Number} alpha 值 默认为1
      * @returns {object} {rbg:{String},toString:{function} } RGB颜色值
      */
-    hexToRgba(color, alpha) {
+    static hexToRgba(color, alpha) {
         if(!color.startsWith('#') && !color.startsWith('0x') ){
             throw new Error('args is not HEX color');
         }
@@ -82,7 +92,7 @@ class Christina {
      * @param {Array} color R、G、B三个值
      * @returns {string} Hex值
      */
-    rgbToHex(color) {
+    static rgbToHex(color) {
         const newColor = color.map(item => {
             return Number(item).toString(16).length < 2 ?
                 `0${Number(item).toString(16)}` :
@@ -96,7 +106,7 @@ class Christina {
     }
     // 2.2 随机数生成
     // 随机浮点数
-    random(min = 0,max){
+    static random(min = 0,max){
         if(max === undefined){
             max = min || 1;
             min = 0;
@@ -104,7 +114,7 @@ class Christina {
         return Math.random() * ( max - min ) + min;
     }
     // 获得一个区间的整数随机数 不指定则为 [0- 100] 闭区间
-    randomInt(min = 0,max = 100 ) {
+    static randomInt(min = 0,max = 100 ) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -116,7 +126,7 @@ class Christina {
      * @param {Number} bits 需要保留几位小数
      * @returns {Array} 对应的数组
      */
-    smoothRandom(count, bits) {
+    static smoothRandom(count, bits) {
         let num = parseInt(count);
         const rs = [];
         if (isNaN(num) || (typeof num !== 'number')) {
@@ -146,7 +156,7 @@ class Christina {
      * @param {number} tarEnd 映射数据终点
      * @returns {number} 映射数据
      */
-    analogy(origin, oriStart, oriEnd, tarStart, tarEnd) {
+    static analogy(origin, oriStart, oriEnd, tarStart, tarEnd) {
         return ((tarEnd - tarStart) * ((origin - oriStart) / (oriEnd - oriStart))) + tarStart;
     }
 
@@ -157,7 +167,7 @@ class Christina {
      * @returns {Float32Array}
      * @constructor
      */
-    float32Concat(first, second) {
+    static float32Concat(first, second) {
         if (!( this.isFloat32Array(first) || this.isArray(first) ) || !(this.isFloat32Array(second) || this.isArray(second) )) {
             return new Float32Array([]);
         }
@@ -170,7 +180,7 @@ class Christina {
         return result;
     }
 
-    float32ToArray(origin) {
+    static float32ToArray(origin) {
         if (!this.isFloat32Array(origin)) {
             return origin;
         }
@@ -184,7 +194,7 @@ class Christina {
      * @param origin 源数组
      * @returns {*} 结果数组
      */
-    arrayStacked(maxLength, origin) {
+    static arrayStacked(maxLength, origin) {
         if (!(Array.isArray(origin) || this.isFloat32Array(origin))) {
                 return;
             }
@@ -213,7 +223,7 @@ class Christina {
      * @param d 持续时间
      * @returns {*}
      */
-    inExpo(t, b, c, d) {
+    static inExpo(t, b, c, d) {
         return (t === 0) ? b : c * Math.pow(2, 10 * (t / d - 1)) + b;
     }
     // 3. 动画算法
@@ -233,7 +243,7 @@ class Christina {
      * @param {number} hypotenuse 斜边
      * @returns {*}
      */
-    pythagoras(side1 = 0, side2 = 0, hypotenuse) {
+    static pythagoras(side1 = 0, side2 = 0, hypotenuse) {
         let rs;
         if (!hypotenuse) {
             rs = Math.sqrt(Math.pow(+side1, 2) + Math.pow(+side2, 2));
@@ -255,7 +265,7 @@ class Christina {
      * @returns {object}
      */
 
-    matrix3DRotate(type = 'x', angle = 0, x, y, z) {
+    static matrix3DRotate(type = 'x', angle = 0, x, y, z) {
         let cos = Math.cos(angle);
         let sin = Math.sin(angle);
         let rs = {};
@@ -291,7 +301,7 @@ class Christina {
      * @param z2
      * @returns {number}
      */
-    distancePoint(x1,x2,y1,y2,z1,z2){
+    static distancePoint(x1,x2,y1,y2,z1,z2){
         return Math.sqrt( (x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
     }
 
@@ -306,7 +316,7 @@ class Christina {
      *     Scale: {Array} // 缩放大小 [x,y,z]
      **/
 
-    getMatrix4(offset) {
+    static getMatrix4(offset) {
         let m = new THREE.Matrix4();
 
         for (const key in offset) {
@@ -322,7 +332,7 @@ class Christina {
     }
 
     // 3.2 动画处理
-    raf(callback) {
+    static raf(callback) {
         window.ranf = window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
             window.mozRequestAnimationFrame ||
@@ -350,7 +360,7 @@ class Christina {
      * @param obj
      * @returns {Array}
      */
-    objToArr(obj) {
+    static objToArr(obj) {
         const ar = [];
         for (const key in obj) {
             ar.push(obj[key]);
@@ -358,11 +368,11 @@ class Christina {
         return ar;
     }
 
-    objMerge(obj1, obj2) {
+    static objMerge(obj1, obj2) {
         return Object.assign({},obj1,obj2);
     }
     // 判断字符串有多少个字节
-    strByteLength(data) {
+    static strByteLength(data) {
         let len = 0;
         for (let i = 0; i < data.length; i++) {
             // 全角
@@ -380,7 +390,7 @@ class Christina {
      * @type {{}}
      */
 
-    debounce(fn, delay) {
+    static debounce(fn, delay) {
         let timer = 0;
         return (...args) => {
                 clearTimeout(timer);
@@ -396,7 +406,7 @@ class Christina {
      * @param {string} name The url param key name.
      * @returns {*} The value with the key in the url search.
      */
-    getUrlParam(name) {
+    static getUrlParam(name) {
         const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i'),
             stringStart = 1;
         const r = window.location.href.substr(stringStart).match(reg);
@@ -411,7 +421,7 @@ class Christina {
 
 
 
-    partition(myArray, left, right){
+    static partition(myArray, left, right){
         // 保存定位点
         let temp = myArray[left]
         while (left < right){
@@ -428,7 +438,7 @@ class Christina {
         return left;
     }
     // 快排
-    Qsort(
+    static Qsort(
         arr = [],
         left = 0,
         right = arr.length - 1,
@@ -440,5 +450,3 @@ class Christina {
         return arr;
     }
 }
-
-export default new Christina();
