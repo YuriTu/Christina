@@ -60,6 +60,13 @@ _.isFloat32Array([]) // -> false
 _.isNullString("") // -> true 
 
 _.isIE() // -> bool
+
+/**
+ * 判断是否支持WebGL GLSL 0.93
+ *
+ * @return {bool} 当前浏览器是否支持
+ */
+_.canWebGL() // -> bool
 ```
 
 - 数据处理
@@ -91,9 +98,10 @@ _.randomInt(min,max) // -> 25
 
 /**
  * 生成一组平滑的随机数，根据数量，将随机数均匀的分布
- * @param {String} count 需要生成几个数据
- * @param {Number} bits 需要保留几位小数
- * @returns {Array} 对应的数组
+ * 
+ * @param {string} count 需要生成几个数据
+ * @param {number} bits 需要保留几位小数
+ * @return {Array} 对应的数组
  */
 _.smoothRandom(count,bits) // -> [0,2.5,4.5,7.2.9.8]
 ```
@@ -103,21 +111,22 @@ _.smoothRandom(count,bits) // -> [0,2.5,4.5,7.2.9.8]
 ```javascript
 /**
  * 数字映射
+ * 
  * @param {number} origin 提供数据
  * @param {number} oriStart 数据起点
  * @param {number} oriEnd 数据重点
  * @param {number} tarStart 映射数据起点
  * @param {number} tarEnd 映射数据终点
- * @returns {number} 映射数据
+ * @return {number} 映射数据
  */
 _.analogy(3,-5,5,0,100)) // -> 80
 
 /**
  * float32类型的array.concat
- * @param first
- * @param second
- * @returns {Float32Array}
- * @constructor
+ * 
+ * @param {Float32Array} first 连接数组A
+ * @param {Float32Array} second 连接数组B
+ * @return {Float32Array}
  */
 
 _.float32Concat([1,2,3],new Float32Array([4,5,6])) // -> new Float32Array([1,2,3,4,5,6])
@@ -126,9 +135,10 @@ _.float32ToArray(new Float32Array([4,5,6]) // -> [4,5,6]
 
 /**
  * 数组堆叠 将数组循环顺序堆叠于一个指定长度的数组
- * @param maxLength 目标长度
- * @param origin 源数组
- * @returns {*} 结果数组
+ * 
+ * @param {number} maxLength 目标长度
+ * @param {array} origin 源数组
+ * @return {*} 结果数组
  */
 
 _.arrayStacked(6,[1,2,3]) // -> [1,2,3,1,2,3]
@@ -141,10 +151,11 @@ _.arrayStacked(6,[1,2,3]) // -> [1,2,3,1,2,3]
 ```javascript
 /**
  * 勾股定理计算
- * @param {number} side1
- * @param {number} side2
+ * 
+ * @param {number} side1 邻边A
+ * @param {number} side2 邻边B
  * @param {number} hypotenuse 斜边
- * @returns {*}
+ * @return {number} 第三边
  */
 _.pythagoras(3,4) // -> 5
 _.pythagoras(null,4,5) // -> 3
@@ -156,7 +167,7 @@ _.pythagoras(null,4,5) // -> 3
  * @param {num} x 坐标
  * @param {num} y 坐标
  * @param {num} z 坐标
- * @returns {x:number,y:number,z:number}
+ * @return {x:number,y:number,z:number}
  */
 
 // js语言精度问题可能为-0.99999，有一定误差不影响动画制作

@@ -27,4 +27,10 @@ describe('Type judgment', () => {
     it('null string', () => {
         expect(_.isNullString('')).to.be.ok;
     });
+    // it('IE',() => {
+    //     expect(_.isIE(10).to.not.be.ok);
+    // });
+    // it('WebGL',() => {
+    //     expect(_.canWebGL().to.not.be.ok);
+    // });
 });

@@ -3,23 +3,20 @@
  * @author tuqiang_ru@163.com）
  */
 
-// todo 随机 -1 1 二分数子
-
-
-Math.radians = function(degrees) {
-    return degrees * Math.PI / 180;
-};
-
-Math.degrees = function(radians) {
-    return radians * 180 / Math.PI;
-};
-
 export default class Christina {
     // 构造函数处理
-    constructor(){
-        String.prototype.setProto = function(key,value){
+    constructor() {
+        String.prototype.setProto = function (key, value) {
             this[key] = value;
-        }
+        };
+
+        Math.radians = function (degrees) {
+            return degrees * Math.PI / 180;
+        };
+
+        Math.degrees = function (radians) {
+            return radians * 180 / Math.PI;
+        };
     }
     // 1. 类型判断
     static type(obj) {
@@ -47,7 +44,7 @@ export default class Christina {
     }
 
     static isNullString(obj) {
-        return this.isString(obj) && obj.replace(/(^\s*)|(\s*$)/g, '').length ? false : true;
+        return !(this.isString(obj) && obj.replace(/(^\s*)|(\s*$)/g, '').length);
     }
 
     static isIE(version) {
@@ -56,65 +53,93 @@ export default class Christina {
         return b.getElementsByTagName('i').length === 1;
     }
 
+    /**
+     * 判断是否支持WebGL GLSL 0.93
+     *
+     * @return {bool} 当前浏览器是否支持
+     */
+    static canWebGL() {
+        const canvas = document.createElement('canvas');
+        let names = ['webgl', 'experimental-webgl', 'webkit-3d', 'moz-webgl'];
+        let context = null;
+        for (let i = 0; i < names.length; ++i) {
+            try {
+                context = canvas.getContext(names[i]);
+            }
+            catch (e) {
+                console.error('Your browser not support webgl');
+            }
+            if (context) {
+                break;
+            }
+        }
+        // 判断是否是IE 11.0.9600.17031 之前的版本，其支持的是 WEBGL GLSLS ES 0.92.
+        // 市面上的主流3d库需要0.93的api 会导致不可使用
+        return !!context && context.getExtension('WEBGL_depth_texture');
+    }
+
     // 2.数据处理
-    //2.1 数据转换
+    // 2.1 数据转换
     /**
      * Hex转RGBA
-     * @param {String} color Hex颜色值 eg： #ff0000 #fff 0xfff
-     * @param {Number} alpha 值 默认为1
-     * @returns {object} {rbg:{String},toString:{function} } RGB颜色值
+     *
+     * @param {string} color Hex颜色值 eg： #ff0000 #fff 0xfff
+     * @param {number} alpha 值 默认为1
+     * @return {Object} {rbg:{String},toString:{function} } RGB颜色值
      */
     static hexToRgba(color, alpha) {
-        if(!color.startsWith('#') && !color.startsWith('0x') ){
+        if (!color.startsWith('#') && !color.startsWith('0x')) {
             throw new Error('args is not HEX color');
         }
         let newColor = color.replace(/#|0x/, '');
         const a = parseFloat(alpha) || 1;
         if (newColor.length === 3) {
-            newColor = newColor.split('').map(item => parseInt(`0x${item}${item}`));
+            newColor = newColor.split('').map(item => parseInt(`0x${item}${item}`, 10));
         } else {
             newColor = newColor.split('').map((item, index) => {
                 if (index % 2 === 0) {
-                    return parseInt(`0x${item}${newColor[index + 1]}`);
+                    return parseInt(`0x${item}${newColor[index + 1]}`, 16);
                 }
                 return '';
             }).filter(item => item !== '');
         }
         const result = new String(`rgba(${newColor.join(',')},${a})`)
-        result.setProto('rgb',`rgb(${newColor.join(',')})`);
-        result.setProto('rgbArr',newColor);
+        result.setProto('rgb', `rgb(${newColor.join(',')})`);
+        result.setProto('rgbArr', newColor);
 
         return result;
     }
 
     /**
      * RGB转Hex
+     *
      * @param {Array} color R、G、B三个值
-     * @returns {string} Hex值
+     * @return {string} Hex值
      */
     static rgbToHex(color) {
-        const newColor = color.map(item => {
-            return Number(item).toString(16).length < 2 ?
-                `0${Number(item).toString(16)}` :
-                Number(item).toString(16);
-        }).join('');
+        const newColor = color.map(item =>  Number(item).toString(16).length < 2
+                ? `0${Number(item).toString(16)}`
+                : Number(item).toString(16)
+        ).join('');
 
         const rs = new String(`#${newColor}`)
-        rs.setProto('0x',`0x${newColor}`)
+        rs.setProto('0x', `0x${newColor}`)
 
         return rs;
     }
     // 2.2 随机数生成
+
     // 随机浮点数
-    static random(min = 0,max){
-        if(max === undefined){
+    static random(min = 0,max) {
+        if (max === undefined) {
             max = min || 1;
             min = 0;
         }
-        return Math.random() * ( max - min ) + min;
+        return Math.random() * (max - min) + min;
     }
+
     // 获得一个区间的整数随机数 不指定则为 [0- 100] 闭区间
-    static randomInt(min = 0,max = 100 ) {
+    static randomInt(min = 0,max = 100) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -122,12 +147,13 @@ export default class Christina {
 
     /**
      * 生成一组平滑的随机数，根据数量，将随机数均匀的分布
-     * @param {String} count 需要生成几个数据
-     * @param {Number} bits 需要保留几位小数
-     * @returns {Array} 对应的数组
+     *
+     * @param {string} count 需要生成几个数据
+     * @param {number} bits 需要保留几位小数
+     * @return {Array} 对应的数组
      */
     static smoothRandom(count, bits) {
-        let num = parseInt(count);
+        let num = parseInt(count,10);
         const rs = [];
         if (isNaN(num) || (typeof num !== 'number')) {
             num = 1;
@@ -149,12 +175,13 @@ export default class Christina {
 
     /**
      * 数字映射
+     *
      * @param {number} origin 提供数据
      * @param {number} oriStart 数据起点
      * @param {number} oriEnd 数据重点
      * @param {number} tarStart 映射数据起点
      * @param {number} tarEnd 映射数据终点
-     * @returns {number} 映射数据
+     * @return {number} 映射数据
      */
     static analogy(origin, oriStart, oriEnd, tarStart, tarEnd) {
         return ((tarEnd - tarStart) * ((origin - oriStart) / (oriEnd - oriStart))) + tarStart;
@@ -162,13 +189,14 @@ export default class Christina {
 
     /**
      * float32类型的array.concat
-     * @param first
-     * @param second
-     * @returns {Float32Array}
-     * @constructor
+     *
+     * @param {Float32Array} first 连接数组A
+     * @param {Float32Array} second 连接数组B
+     * @return {Float32Array}
      */
     static float32Concat(first, second) {
-        if (!( this.isFloat32Array(first) || this.isArray(first) ) || !(this.isFloat32Array(second) || this.isArray(second) )) {
+        if (!(this.isFloat32Array(first) || this.isArray(first))
+            || !(this.isFloat32Array(second) || this.isArray(second))) {
             return new Float32Array([]);
         }
         const firstLength = first.length;
@@ -190,22 +218,22 @@ export default class Christina {
 
     /**
      * 数组堆叠 将数组循环顺序堆叠于一个指定长度的数组
-     * @param maxLength 目标长度
-     * @param origin 源数组
-     * @returns {*} 结果数组
+     *
+     * @param {number} maxLength 目标长度
+     * @param {Array} origin 源数组
+     * @return {*} 结果数组
      */
     static arrayStacked(maxLength, origin) {
-        if (!(Array.isArray(origin) || this.isFloat32Array(origin))) {
-                return;
-            }
-            if (origin.length === 0) {
-                return;
-            }
-                if (origin.length > maxLength) {
-            return origin;
-            }
-
         const rs = [];
+        if (!(Array.isArray(origin) || this.isFloat32Array(origin))) {
+            return;
+        }
+        if (origin.length === 0) {
+            return;
+        }
+        if (origin.length > maxLength) {
+            return origin;
+        }
         for (let i = 0; i < maxLength; i++) {
             const trueIndex = i % origin.length;
             rs[i] = origin[trueIndex];
@@ -217,11 +245,12 @@ export default class Christina {
 
     /**
      * 返回基于二次函数的渐变值
-     * @param t 当前值
-     * @param b 开始值
-     * @param c 变化值
-     * @param d 持续时间
-     * @returns {*}
+     *
+     * @param {number} t 当前值
+     * @param {number} b 开始值
+     * @param {number} c 变化值
+     * @param {number} d 持续时间
+     * @return {number} 对应y值
      */
     static inExpo(t, b, c, d) {
         return (t === 0) ? b : c * Math.pow(2, 10 * (t / d - 1)) + b;
@@ -238,16 +267,18 @@ export default class Christina {
 
     /**
      * 勾股定理计算
-     * @param {number} side1
-     * @param {number} side2
+     *
+     * @param {number} side1 邻边A
+     * @param {number} side2 邻边B
      * @param {number} hypotenuse 斜边
-     * @returns {*}
+     * @return {number} 第三边
      */
     static pythagoras(side1 = 0, side2 = 0, hypotenuse) {
         let rs;
         if (!hypotenuse) {
             rs = Math.sqrt(Math.pow(+side1, 2) + Math.pow(+side2, 2));
-        } else {
+        }
+        else {
             const s1 = +side1 || 0;
             const s2 = +side2 || 0;
             rs = Math.sqrt(Math.pow(+hypotenuse, 2) - Math.pow(s1, 2) - Math.pow(s2, 2));
@@ -257,14 +288,14 @@ export default class Christina {
 
     /**
      * 三维矩阵变换
+     *
      * @param {string} type 饶哪个轴旋转
      * @param {number} angle 旋转角度
      * @param {num} x 坐标
      * @param {num} y 坐标
      * @param {num} z 坐标
-     * @returns {object}
+     * @return {Object} x:number,y:number,z:number
      */
-
     static matrix3DRotate(type = 'x', angle = 0, x, y, z) {
         let cos = Math.cos(angle);
         let sin = Math.sin(angle);
@@ -286,23 +317,24 @@ export default class Christina {
                 rs.z = z;
                 break;
             default:
-                throw new Error('type must be x|y|z')
+                throw new Error('type must be x|y|z');
         }
         return rs;
     }
 
     /**
      * 空间中两点距离
-     * @param x1
-     * @param x2
-     * @param y1
-     * @param y2
-     * @param z1
-     * @param z2
-     * @returns {number}
+     *
+     * @param {number} x1 坐标点A X
+     * @param {number} x2 坐标点B X
+     * @param {number} y1 坐标点A Y
+     * @param {number} y2 坐标点B Y
+     * @param {number} z1 坐标点A Z
+     * @param {number} z2 坐标点B Z
+     * @return {number}
      */
-    static distancePoint(x1,x2,y1,y2,z1,z2){
-        return Math.sqrt( (x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
+    static distancePoint(x1, x2, y1, y2, z1, z2) {
+        return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
     }
 
     /**
@@ -317,31 +349,38 @@ export default class Christina {
      **/
 
     static getMatrix4(offset) {
-        let m = new THREE.Matrix4();
+        try {
+            let m = new THREE.Matrix4();
 
-        for (const key in offset) {
-            const val = offset[key];
-            if (Array.isArray(val)) { // 位移，缩放，值为数组
-                // console.log(...val);
-                m[`make${key}`](...val);
-            } else { // 旋转，值为角度
-                m[`make${key}`](val);
+            for (const key in offset) {
+                const val = offset[key];
+                if (Array.isArray(val)) {
+                    // 位移，缩放，值为数组
+                    m[`make${key}`](...val);
+                }
+                else {
+                    // 旋转，值为角度
+                    m[`make${key}`](val);
+                }
             }
+            return m;
         }
-        return m;
+        catch (e) {
+            console.error('THREE is undefined');
+        }
+
     }
 
     // 3.2 动画处理
     static raf(callback) {
-        window.ranf = window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame ||
-            window.msRequestAnimationFrame ||
-
-            function (cb) {
-                let start,
-                    finish;
+        window.ranf = window.requestAnimationFrame
+            || window.webkitRequestAnimationFrame
+            || window.mozRequestAnimationFrame
+            || window.oRequestAnimationFrame
+            || window.msRequestAnimationFrame
+            || function (cb) {
+                let start;
+                let finish;
                 const self = {};
                 window.setTimeout(() => {
                     start = +new Date();
@@ -357,8 +396,9 @@ export default class Christina {
     // 4.web常用
     /**
      * 类数组对象转数组
-     * @param obj
-     * @returns {Array}
+     *
+     * @param {Object} obj 类数组对象
+     * @return {Array}
      */
     static objToArr(obj) {
         const ar = [];
@@ -369,7 +409,7 @@ export default class Christina {
     }
 
     static objMerge(obj1, obj2) {
-        return Object.assign({},obj1,obj2);
+        return Object.assign({}, obj1, obj2);
     }
     // 判断字符串有多少个字节
     static strByteLength(data) {
@@ -378,7 +418,8 @@ export default class Christina {
             // 全角
             if (data[i].match(/[^x00-xff]/ig) !== null) {
                 len += 2;
-            } else {
+            }
+            else {
                 len += 1;
             }
         }
@@ -387,15 +428,17 @@ export default class Christina {
 
     /**
      * 函数防抖
-     * @type {{}}
+     *
+     * @param {Function} fn 内部函数
+     * @param {number} delay 防抖时间
+     * @return {Function} 防抖函数
      */
-
     static debounce(fn, delay) {
         let timer = 0;
         return (...args) => {
-                clearTimeout(timer);
-                timer = setTimeout(() => {
-                    fn(...args);
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                fn(...args);
             }, delay);
         };
     }
@@ -403,12 +446,13 @@ export default class Christina {
     /**
      * 取url中的参数
      * 调用方法_.getUrlParam("参数名")
+     *
      * @param {string} name The url param key name.
-     * @returns {*} The value with the key in the url search.
+     * @return {*} The value with the key in the url search.
      */
     static getUrlParam(name) {
-        const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i'),
-            stringStart = 1;
+        const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
+        const stringStart = 1;
         const r = window.location.href.substr(stringStart).match(reg);
         if (r !== null) {
             const valueIndex = 2;
@@ -419,18 +463,18 @@ export default class Christina {
         return null;
     }
 
-
-
-    static partition(myArray, left, right){
+    static partition(myArray, left, right) {
         // 保存定位点
         let temp = myArray[left]
-        while (left < right){
+        while (left < right) {
             // 交换
-            while(left < right && myArray[right] >= temp)--right;
-            myArray[left] =
-
-                myArray[right];
-            while(left < right && myArray[left] <= temp)++left;
+            while (left < right && myArray[right] >= temp) {
+                --right;
+            }
+            myArray[left] = myArray[right];
+            while (left < right && myArray[left] <= temp) {
+                ++left;
+            }
             myArray[right] = myArray[left];
         }
         // 还原
@@ -442,11 +486,13 @@ export default class Christina {
         arr = [],
         left = 0,
         right = arr.length - 1,
-    ){
-        if(left >= right) return;
+    ) {
+        if (left >= right) {
+            return;
+        }
         let index = this.partition(arr, left, right);
         this.Qsort(arr, left, index - 1);
-        this.Qsort(arr, index +1, right);
+        this.Qsort(arr, index + 1, right);
         return arr;
     }
 }
