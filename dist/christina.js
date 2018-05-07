@@ -511,20 +511,27 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @author tuqiang_ru@163.com）
  */
 
+String.prototype.setProto = function (key, value) {
+    this[key] = value;
+};
+
+Math.radians = function (degrees) {
+    return degrees * Math.PI / 180;
+};
+
+Math.degrees = function (radians) {
+    return radians * 180 / Math.PI;
+};
+
 var Christina = function () {
-    // 构造函数处理
     function Christina() {
         (0, _classCallCheck3.default)(this, Christina);
-
-        String.prototype.setProto = function (key, value) {
-            this[key] = value;
-        };
     }
-    // 1. 类型判断
 
-
-    (0, _createClass3.default)(Christina, [{
+    (0, _createClass3.default)(Christina, null, [{
         key: 'type',
+
+        // 1. 类型判断
         value: function type(obj) {
             return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '');
         }
@@ -556,7 +563,7 @@ var Christina = function () {
     }, {
         key: 'isNullString',
         value: function isNullString(obj) {
-            return this.isString(obj) && obj.replace(/(^\s*)|(\s*$)/g, '').length ? false : true;
+            return !(this.isString(obj) && obj.replace(/(^\s*)|(\s*$)/g, '').length);
         }
     }, {
         key: 'isIE',
@@ -566,13 +573,41 @@ var Christina = function () {
             return b.getElementsByTagName('i').length === 1;
         }
 
+        /**
+         * 判断是否支持WebGL GLSL 0.93
+         *
+         * @return {bool} 当前浏览器是否支持
+         */
+
+    }, {
+        key: 'canWebGL',
+        value: function canWebGL() {
+            var canvas = document.createElement('canvas');
+            var names = ['webgl', 'experimental-webgl', 'webkit-3d', 'moz-webgl'];
+            var context = null;
+            for (var i = 0; i < names.length; ++i) {
+                try {
+                    context = canvas.getContext(names[i]);
+                } catch (e) {
+                    console.error('Your browser not support webgl');
+                }
+                if (context) {
+                    break;
+                }
+            }
+            // 判断是否是IE 11.0.9600.17031 之前的版本，其支持的是 WEBGL GLSLS ES 0.92.
+            // 市面上的主流3d库需要0.93的api 会导致不可使用
+            return !!context && context.getExtension('WEBGL_depth_texture');
+        }
+
         // 2.数据处理
-        //2.1 数据转换
+        // 2.1 数据转换
         /**
          * Hex转RGBA
-         * @param {String} color Hex颜色值 eg： #ff0000 #fff 0xfff
-         * @param {Number} alpha 值 默认为1
-         * @returns {object} {rbg:{String},toString:{function} } RGB颜色值
+         *
+         * @param {string} color Hex颜色值 eg： #ff0000 #fff 0xfff
+         * @param {number} alpha 值 默认为1
+         * @return {Object} {rbg:{String},toString:{function} } RGB颜色值
          */
 
     }, {
@@ -585,12 +620,12 @@ var Christina = function () {
             var a = parseFloat(alpha) || 1;
             if (newColor.length === 3) {
                 newColor = newColor.split('').map(function (item) {
-                    return parseInt('0x' + item + item);
+                    return parseInt('0x' + item + item, 10);
                 });
             } else {
                 newColor = newColor.split('').map(function (item, index) {
                     if (index % 2 === 0) {
-                        return parseInt('0x' + item + newColor[index + 1]);
+                        return parseInt('0x' + item + newColor[index + 1], 16);
                     }
                     return '';
                 }).filter(function (item) {
@@ -606,8 +641,9 @@ var Christina = function () {
 
         /**
          * RGB转Hex
+         *
          * @param {Array} color R、G、B三个值
-         * @returns {string} Hex值
+         * @return {string} Hex值
          */
 
     }, {
@@ -623,6 +659,7 @@ var Christina = function () {
             return rs;
         }
         // 2.2 随机数生成
+
         // 随机浮点数
 
     }, {
@@ -637,6 +674,7 @@ var Christina = function () {
             }
             return Math.random() * (max - min) + min;
         }
+
         // 获得一个区间的整数随机数 不指定则为 [0- 100] 闭区间
 
     }, {
@@ -652,15 +690,16 @@ var Christina = function () {
 
         /**
          * 生成一组平滑的随机数，根据数量，将随机数均匀的分布
-         * @param {String} count 需要生成几个数据
-         * @param {Number} bits 需要保留几位小数
-         * @returns {Array} 对应的数组
+         *
+         * @param {string} count 需要生成几个数据
+         * @param {number} bits 需要保留几位小数
+         * @return {Array} 对应的数组
          */
 
     }, {
         key: 'smoothRandom',
         value: function smoothRandom(count, bits) {
-            var num = parseInt(count);
+            var num = parseInt(count, 10);
             var rs = [];
             if (isNaN(num) || typeof num !== 'number') {
                 num = 1;
@@ -682,12 +721,13 @@ var Christina = function () {
 
         /**
          * 数字映射
+         *
          * @param {number} origin 提供数据
          * @param {number} oriStart 数据起点
          * @param {number} oriEnd 数据重点
          * @param {number} tarStart 映射数据起点
          * @param {number} tarEnd 映射数据终点
-         * @returns {number} 映射数据
+         * @return {number} 映射数据
          */
 
     }, {
@@ -698,10 +738,10 @@ var Christina = function () {
 
         /**
          * float32类型的array.concat
-         * @param first
-         * @param second
-         * @returns {Float32Array}
-         * @constructor
+         *
+         * @param {Float32Array} first 连接数组A
+         * @param {Float32Array} second 连接数组B
+         * @return {Float32Array}
          */
 
     }, {
@@ -730,14 +770,16 @@ var Christina = function () {
 
         /**
          * 数组堆叠 将数组循环顺序堆叠于一个指定长度的数组
-         * @param maxLength 目标长度
-         * @param origin 源数组
-         * @returns {*} 结果数组
+         *
+         * @param {number} maxLength 目标长度
+         * @param {Array} origin 源数组
+         * @return {*} 结果数组
          */
 
     }, {
         key: 'arrayStacked',
         value: function arrayStacked(maxLength, origin) {
+            var rs = [];
             if (!(Array.isArray(origin) || this.isFloat32Array(origin))) {
                 return;
             }
@@ -747,8 +789,6 @@ var Christina = function () {
             if (origin.length > maxLength) {
                 return origin;
             }
-
-            var rs = [];
             for (var i = 0; i < maxLength; i++) {
                 var trueIndex = i % origin.length;
                 rs[i] = origin[trueIndex];
@@ -758,11 +798,12 @@ var Christina = function () {
 
         /**
          * 返回基于二次函数的渐变值
-         * @param t 当前值
-         * @param b 开始值
-         * @param c 变化值
-         * @param d 持续时间
-         * @returns {*}
+         *
+         * @param {number} t 当前值
+         * @param {number} b 开始值
+         * @param {number} c 变化值
+         * @param {number} d 持续时间
+         * @return {number} 对应y值
          */
 
     }, {
@@ -782,10 +823,11 @@ var Christina = function () {
 
         /**
          * 勾股定理计算
-         * @param {number} side1
-         * @param {number} side2
+         *
+         * @param {number} side1 邻边A
+         * @param {number} side2 邻边B
          * @param {number} hypotenuse 斜边
-         * @returns {*}
+         * @return {number} 第三边
          */
 
     }, {
@@ -808,12 +850,13 @@ var Christina = function () {
 
         /**
          * 三维矩阵变换
+         *
          * @param {string} type 饶哪个轴旋转
          * @param {number} angle 旋转角度
          * @param {num} x 坐标
          * @param {num} y 坐标
          * @param {num} z 坐标
-         * @returns {object}
+         * @return {Object} x:number,y:number,z:number
          */
 
     }, {
@@ -852,13 +895,14 @@ var Christina = function () {
 
         /**
          * 空间中两点距离
-         * @param x1
-         * @param x2
-         * @param y1
-         * @param y2
-         * @param z1
-         * @param z2
-         * @returns {number}
+         *
+         * @param {number} x1 坐标点A X
+         * @param {number} x2 坐标点B X
+         * @param {number} y1 坐标点A Y
+         * @param {number} y2 坐标点B Y
+         * @param {number} z1 坐标点A Z
+         * @param {number} z2 坐标点B Z
+         * @return {number}
          */
 
     }, {
@@ -881,20 +925,23 @@ var Christina = function () {
     }, {
         key: 'getMatrix4',
         value: function getMatrix4(offset) {
-            var m = new THREE.Matrix4();
+            try {
+                var m = new THREE.Matrix4();
 
-            for (var key in offset) {
-                var val = offset[key];
-                if (Array.isArray(val)) {
-                    // 位移，缩放，值为数组
-                    // console.log(...val);
-                    m['make' + key].apply(m, (0, _toConsumableArray3.default)(val));
-                } else {
-                    // 旋转，值为角度
-                    m['make' + key](val);
+                for (var key in offset) {
+                    var val = offset[key];
+                    if (Array.isArray(val)) {
+                        // 位移，缩放，值为数组
+                        m['make' + key].apply(m, (0, _toConsumableArray3.default)(val));
+                    } else {
+                        // 旋转，值为角度
+                        m['make' + key](val);
+                    }
                 }
+                return m;
+            } catch (e) {
+                console.error('THREE is undefined');
             }
-            return m;
         }
 
         // 3.2 动画处理
@@ -903,8 +950,8 @@ var Christina = function () {
         key: 'raf',
         value: function raf(callback) {
             window.ranf = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (cb) {
-                var start = void 0,
-                    finish = void 0;
+                var start = void 0;
+                var finish = void 0;
                 var self = {};
                 window.setTimeout(function () {
                     start = +new Date();
@@ -920,8 +967,9 @@ var Christina = function () {
         // 4.web常用
         /**
          * 类数组对象转数组
-         * @param obj
-         * @returns {Array}
+         *
+         * @param {Object} obj 类数组对象
+         * @return {Array}
          */
 
     }, {
@@ -957,7 +1005,10 @@ var Christina = function () {
 
         /**
          * 函数防抖
-         * @type {{}}
+         *
+         * @param {Function} fn 内部函数
+         * @param {number} delay 防抖时间
+         * @return {Function} 防抖函数
          */
 
     }, {
@@ -979,15 +1030,16 @@ var Christina = function () {
         /**
          * 取url中的参数
          * 调用方法_.getUrlParam("参数名")
+         *
          * @param {string} name The url param key name.
-         * @returns {*} The value with the key in the url search.
+         * @return {*} The value with the key in the url search.
          */
 
     }, {
         key: 'getUrlParam',
         value: function getUrlParam(name) {
-            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i'),
-                stringStart = 1;
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+            var stringStart = 1;
             var r = window.location.href.substr(stringStart).match(reg);
             if (r !== null) {
                 var valueIndex = 2;
@@ -1006,10 +1058,12 @@ var Christina = function () {
                 // 交换
                 while (left < right && myArray[right] >= temp) {
                     --right;
-                }myArray[left] = myArray[right];
+                }
+                myArray[left] = myArray[right];
                 while (left < right && myArray[left] <= temp) {
                     ++left;
-                }myArray[right] = myArray[left];
+                }
+                myArray[right] = myArray[left];
             }
             // 还原
             myArray[left] = temp;
@@ -1024,7 +1078,9 @@ var Christina = function () {
             var left = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
             var right = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : arr.length - 1;
 
-            if (left >= right) return;
+            if (left >= right) {
+                return;
+            }
             var index = this.partition(arr, left, right);
             this.Qsort(arr, left, index - 1);
             this.Qsort(arr, index + 1, right);
@@ -1034,7 +1090,7 @@ var Christina = function () {
     return Christina;
 }();
 
-exports.default = new Christina();
+exports.default = Christina;
 
 /***/ }),
 /* 29 */

@@ -3,21 +3,19 @@
  * @author tuqiang_ru@163.com）
  */
 
+String.prototype.setProto = function (key, value) {
+    this[key] = value;
+};
+
+Math.radians = function (degrees) {
+    return degrees * Math.PI / 180;
+};
+
+Math.degrees = function (radians) {
+    return radians * 180 / Math.PI;
+};
+
 export default class Christina {
-    // 构造函数处理
-    constructor() {
-        String.prototype.setProto = function (key, value) {
-            this[key] = value;
-        };
-
-        Math.radians = function (degrees) {
-            return degrees * Math.PI / 180;
-        };
-
-        Math.degrees = function (radians) {
-            return radians * 180 / Math.PI;
-        };
-    }
     // 1. 类型判断
     static type(obj) {
         return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '');
