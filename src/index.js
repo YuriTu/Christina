@@ -15,7 +15,7 @@ Math.degrees = function (radians) {
     return radians * 180 / Math.PI;
 };
 
-export default class Christina {
+export class Christina {
     // 1. 类型判断
     static type(obj) {
         return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '');
